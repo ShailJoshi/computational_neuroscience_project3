@@ -1,5 +1,19 @@
 function CNSP3_maincode
 load('CN_Project3_2016.mat');
-time_stim=linspace(0.001,20,15000);
-Stm=Stimulus(1:15000);
-
+for j=1:1
+    for i=1:1
+         v=All_Spike_Times{j,i}<15;
+         v=All_Spike_Times{j,i}(v)
+         d=size(v);
+         sum=zeros(1,101);
+        for T=0:100
+            for l=1:d(2)
+                sum(T+1)=sum(T+1)+(Stm(round((v(l)*1000-T+1000*(v(l)<T+1)))))*(v(l)>T+1)/d(2);
+            end
+        
+        end
+        plot(0:100,sum);
+    end
+    
+end
+end
