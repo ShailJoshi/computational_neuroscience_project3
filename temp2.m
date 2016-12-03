@@ -1,17 +1,15 @@
-
 function CNSP3_maincode
 load('CN_Project3_2016.mat');
 
-time_stim=linspace(0.001,20,100);
-
+time_stim=linspace(0.001,15,100);
 MSR=zeros(4,100);
-edges1=linspace(0,20,101);
+edges1=linspace(0,15,101);
 for j=1:4
     N=zeros(1,100);
         for i=1:50
             N=N+histcounts(All_Spike_Times{j,i},edges1);
         end
-        MSR(j,:)=N./50*1000;
+        MSR(j,:)=N./50/0.15;
 end
 
         figure
@@ -32,7 +30,7 @@ end
 
 Stm=Stimulus(1:15000);
 sta=zeros(4,101);
-
+    figure
 for j=1:4
     sum=zeros(1,101);
     for i=1:50
@@ -46,26 +44,39 @@ for j=1:4
         end
     end
     sta(j,:)=sum./50;
-    figure(1)
+
     subplot(2,2,j)
     plot(0:100,sum./50);
     axis([0,100,-0.2,0.2]);
-end
-figure
+    
 for j=1:4
 
 convol=conv(sta(j,:),Stm);
-rate_est=convol(1,101:15100);
+rate_est=convol(1,1:15000);
 rate_est_avg=zeros(1,100);
-for i=1:150
+for i=1:100
     
-        rate_est_avg(i)=mean(rate_est((i-1)*100+1:(i)*100));
+        rate_est_avg(i)=mean(rate_est((i-1)*150+1:(i)*150));
 end
 
 
 size(rate_est_avg)
 
 subplot(2,2,j)
-plot(rate_est_avg,MSR(j,1:150),'o')
+plot(rate_est_avg,MSR(j,:),'o')
 end
+    
+    
 end
+  end
+    figure
+    for j=2:3
+    G0=[9 3 2];
+    L=rate_est_avg;
+    [G,resnorm]=lsqcurvefit(@fsigmoid,G0,L,MSR(j,:));
+    sigplot=zeros(1,
+    subplot(2,1,j)
+     plot(rate_est_avg(j,:),MSR(j,:),'o')
+     hold on
+     plot
+    end
