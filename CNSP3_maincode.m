@@ -1,4 +1,4 @@
-function CNSP3_maincode(parts)
+function CNSP3_maincode(parts,gauss)
 load('CN_Project3_2016.mat');
 time_stim=linspace(0,20,20000);
 if(parts==1 || parts==4 || parts==5 || parts==6)
@@ -88,9 +88,14 @@ if(parts==4 || parts==5 || parts==6)
     ACFg(1,1)=var(Stm);
     H=zeros(4,101);
     figure
-    
+    if(gauss==0)
+        CF=ACF;
+    end
+    if (gauss==1)
+        CF=ACFg;
+    end
     for i=1:4
-        H(i,:)=Linear_filter(sta(i,:),ACF,mean_rate(i));
+        H(i,:)=Linear_filter(sta(i,:),CF,mean_rate(i));
         subplot(2,2,i)
         plot(1:101,H(i,:));
         %axis([0,101,-3,3]);
@@ -169,6 +174,9 @@ if(parts==6)
         figure
         plot(MSE)
         [val, Ind]=max(MSE);
+        if(gauss==0)
+            [val, Ind]=max(MSE(1:10));
+        end
         val
         Ind
         h=H(j,:);
